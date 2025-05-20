@@ -91,25 +91,6 @@ def corregir_sellin():
 
         st.subheader("Cargando archivo maestro COD")
 
-        # ruta_directorio_cod = os.path.join(
-        #     os.path.expanduser('~'),
-        #     "DERCO CHILE REPUESTOS SpA",
-        #     "Planificación y abastecimiento - Documentos",
-        #     "Planificación y Compras Maestros",
-        #     str(año_actual),
-        #     f"{año_actual}-{mes_actual}",
-        #     "MaestrosCSV"
-        # )
-        # archivos_cod = glob.glob(os.path.join(ruta_directorio_cod, "*COD*.csv"))
-
-        # if archivos_cod:
-        #     archivo_cod = archivos_cod[0]
-        #     ultimoeslabon = pd.read_csv(archivo_cod, delimiter=';', encoding='latin-1', decimal=',')
-        #     st.success(f"✅ Archivo COD cargado: {os.path.basename(archivo_cod)}")
-        # else:
-        #     st.error("❌ No se encontró archivo COD en el directorio.")
-        #     st.stop()
-
         uploaded_cod = st.file_uploader("📤 Sube el archivo COD (.csv)", type="csv")
         if uploaded_cod is None:
          st.warning("⚠️ Esperando archivo COD...")
