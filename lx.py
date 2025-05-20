@@ -171,13 +171,6 @@ def corregir_sellin():
         )
         archivos_mara = glob.glob(os.path.join(ruta_directorio_mara, "*MARA*.csv"))
 
-        # if archivos_mara:
-        #     archivo_mara = archivos_mara[0]
-        #     mara = pd.read_csv(archivo_mara, delimiter=';')
-        #     st.success(f"✅ Archivo MARA cargado: {os.path.basename(archivo_mara)}")
-        # else:
-        #     st.error("❌ No se encontró ningún archivo que contenga 'MARA' en el nombre.")
-        #     st.stop()
         uploaded_mara = st.file_uploader("📤 Sube el archivo MARA (.csv)", type="csv")
         if uploaded_mara is None:
             st.warning("⚠️ Esperando archivo MARA...")
@@ -278,32 +271,6 @@ def corregir_sellin():
         st.subheader("Pivot final preparado")
         st.dataframe(pivot_df.head())
 
-        # Export paths
-        # st.subheader("Definiendo rutas de exportación")
-
-        # user_dir = os.path.expanduser('~')
-        # now = datetime.now()
-        # current_year = now.strftime('%Y')
-        # current_month = now.strftime('%m')
-        # previous_month = (now.replace(day=1) - pd.DateOffset(months=1)).strftime('%B-%y')
-        # cycle_month = (now + pd.DateOffset(months=1)).strftime('%b-%y')
-
-        # base_path = os.path.join(
-        #     user_dir,
-        #     'DERCO CHILE REPUESTOS SpA',
-        #     'Planificación y abastecimiento - Documentos',
-        #     'Planificación y Compras Anastasia',
-        #     'Carga Historia de Venta',
-        #     f'{current_year}-{current_month} Ciclo {cycle_month}',
-        #     'AFM',
-        #     'SELL IN'
-        # )
-        # os.makedirs(base_path, exist_ok=True)
-
-        # csv_path = os.path.join(base_path, f'{current_month}.{current_year} Sell_In {previous_month} Corregido.csv')
-        # excel_path = os.path.join(base_path, f'{current_month}.{current_year} Sell_In {previous_month} Corregido.xlsx')
-
-        # Crear columnas nuevas
         st.subheader("Cálculo de estadísticas avanzadas")
 
         nuevas_columnas = ['Clasificación', 'PROMEDIO', 'DESV EST', 'Z', 'LIM SUP', 'LIM INF', 'FRECUENCIA',
@@ -457,16 +424,7 @@ def corregir_sellin():
                 new_columns[i] = new_columns[i].replace("_copy", "")
         pivot_df.columns = new_columns
 
-        # # Exportar CSV y Excel
-        # pivot_df.to_csv(csv_path, sep=';', decimal=',', index=False)
-        # pivot_df.to_excel(excel_path, index=False)
-
-        # st.success("✅ Archivos exportados correctamente")
-        # st.caption(f"📁 Archivo CSV guardado en: `{csv_path}`")
-        # st.caption(f"📁 Archivo Excel guardado en: `{excel_path}`")
         import io
-
-        # Exportar a CSV (en memoria)
         buffer_csv = io.StringIO()
         pivot_df.to_csv(buffer_csv, sep=';', decimal=',', index=False)
         csv_bytes = io.BytesIO(buffer_csv.getvalue().encode('utf-8'))
@@ -477,7 +435,6 @@ def corregir_sellin():
             pivot_df.to_excel(writer, index=False)
         buffer_excel.seek(0)
 
-        # Mostrar botones de descarga
         st.success("✅ Archivos exportados correctamente")
 
         st.download_button(
