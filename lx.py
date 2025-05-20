@@ -462,19 +462,6 @@ def corregir_sellout():
         from datetime import datetime, timedelta
 
         st.subheader("Cargando histórico Sell Out")
-        # two_months_ago = (datetime.now() - pd.DateOffset(months=2)).strftime('%Y-%m')
-        # ruta_automatica = os.path.join(
-        #     os.path.expanduser('~'),
-        #     'DERCO CHILE REPUESTOS SpA',
-        #     'Planificación y abastecimiento - Documentos',
-        #     'Planificación y Compras AFM',
-        #     'S&OP Demanda',
-        #     'Codigos Demanda',
-        #     'Parquets',
-        #     f'Historia_Sell_Out ({two_months_ago})_Canales.parquet'
-        # )
-        # sellout_concat = pd.read_parquet(ruta_automatica)
-        # st.success(f"✅ Histórico cargado desde: {ruta_automatica}")
         archivo_hist = st.file_uploader("📤 Subir archivo histórico Sell Out (.parquet)", type="parquet")
 
         if archivo_hist is not None:
@@ -484,69 +471,6 @@ def corregir_sellout():
         else:
             st.stop()
 
-
-        # st.subheader("Cargando archivo Sell Out GT")
-        # fecha_actual = pd.Timestamp.now()
-        # año_actual = fecha_actual.year
-        # mes_actual = fecha_actual.strftime("%m")
-        # ruta_directorio = os.path.join(
-        #     os.path.expanduser("~"),
-        #     "DERCO CHILE REPUESTOS SpA",
-        #     "Planificación y abastecimiento - Documentos",
-        #     "Planificación y Compras Ventas",
-        #     "Venta Historica Mensual",
-        #     str(año_actual),
-        #     f"{año_actual}-{mes_actual}"
-        # )
-
-        # archivo_selloutGT = next((f for f in os.listdir(ruta_directorio) if "Sell Out" in f and "GT" in f), None)
-
-        # if archivo_selloutGT:
-        #     ruta_archivo_selloutGT = os.path.join(ruta_directorio, archivo_selloutGT)
-        #     selloutGT = pd.read_excel(ruta_archivo_selloutGT, sheet_name="Sell Out GT", header=2)
-        #     columnas_a_mantener = [selloutGT.columns[-2], selloutGT.columns[-1], selloutGT.columns[0], selloutGT.columns[1]]
-        #     selloutGT1 = selloutGT[columnas_a_mantener]
-        #     selloutGT1.rename(columns={selloutGT1.columns[0]: 'Venta'}, inplace=True)
-        #     selloutGT1['Venta'] = selloutGT1['Venta'].astype(int)
-        #     selloutGT1 = selloutGT1[selloutGT1['Venta'] > 0]
-        #     selloutGT1 = selloutGT1[~selloutGT1['Material S4'].str.contains('Total', case=False, na=False)]
-        #     selloutGT1['Fuente'] = 'Sell Out MB51 - SISO'
-        #     selloutGT1['SI/SO'] = 'SO'
-        #     primer_dia_mes_anterior = (fecha_actual.replace(day=1) - timedelta(days=1)).replace(day=1)
-        #     selloutGT1['Mes'] = primer_dia_mes_anterior.strftime('%Y-%m-%d')
-
-        #     v1 = selloutGT1['Venta'].sum()
-        #     st.metric("Suma Sell Out GT", f"{v1:,.0f}")
-        #     st.success(f"✅ Archivo cargado: {ruta_archivo_selloutGT}")
-        # else:
-        #     st.error("❌ No se encontró archivo de Sell Out GT")
-        #     st.stop()
-
-
-        # st.subheader("Unificando Sell Out GT al histórico")
-        # selloutGT1.rename(columns={'Material S4': 'Material', 'Venta': 'Venta UMB', 'Cliente': 'Canal'}, inplace=True)
-        # selloutGT1 = selloutGT1.drop_duplicates(subset=['Material', 'Canal', 'Mes'])
-        # columnas_comunes = [col for col in selloutGT1.columns if col in sellout_concat.columns]
-        # selloutGT1 = selloutGT1[columnas_comunes]
-
-        # st.metric("Total histórico actualizado", f"{sellout_concat['Venta UMB'].sum():,.0f}")
-        # st.dataframe(sellout_concat.head())
-
-        # st.subheader("Cargando archivo Sell Out General")
-        # archivo_sellout = next((f for f in os.listdir(ruta_directorio) if "Sell Out" in f and "GT" not in f), None)
-        # if archivo_sellout:
-        #     ruta_archivo_sellout = os.path.join(ruta_directorio, archivo_sellout)
-        #     sellout = pd.read_excel(ruta_archivo_sellout, sheet_name="Sheet1")
-        #     st.success(f"✅ Sell Out general leído: {archivo_sellout}")
-        #     columnas_requeridas = ['Ce.', 'Material', 'Texto breve de material', 'Fe.contab.', 'Cliente',
-        #                         'Ult.Eslabón', 'Nombre Sector', 'Canal', 'Tipo', 'Forecast AFM',
-        #                         'Venta UMB', 'Semana', 'Canal 2', 'ID']
-        #     sellin = sellout[columnas_requeridas]
-        #     st.dataframe(sellin.head(1))
-        # else:
-        #     st.error("❌ No se encontró archivo de Sell Out general")
-        
-        #     st.subheader("Procesando Sell Out General")
         st.subheader("📤 Cargar archivo Sell Out GT (.xlsx)")
         archivo_selloutGT = st.file_uploader("Sube el archivo Sell Out GT", type="xlsx", key="sellout_gt")
 
@@ -608,20 +532,6 @@ def corregir_sellout():
         df_combinado['Canal 2'] = df_combinado['Canal'].map(canal_mapping)
         st.write("Valores únicos mapeados:", df_combinado['Canal 2'].unique())
 
-        # st.subheader("Cargando archivo COD actual")
-        # user_dir = os.path.expanduser("~")
-        # now = datetime.now()
-        # year_month = now.strftime('%Y-%m')
-        # base_path = os.path.join(user_dir, 'DERCO CHILE REPUESTOS SpA',
-        #                         'Planificación y abastecimiento - Documentos',
-        #                         'Planificación y Compras Maestros',
-        #                         str(now.year), year_month, 'MaestrosCSV')
-        # pattern = os.path.join(base_path, '*COD_ACTUAL*.csv')
-        # files = [f for f in glob.glob(pattern) if 'R3' not in os.path.basename(f)]
-
-        # if not files:
-        #     st.warning("⚠️ No se encontró archivo COD_ACTUAL")
-        #     return
         archivo_cod = st.file_uploader("📤 Subir archivo COD ACTUAL (.csv)", type="csv")
 
         if archivo_cod is not None:
@@ -631,13 +541,6 @@ def corregir_sellout():
         else:
             st.error("❌ Debes subir el archivo COD ACTUAL")
             st.stop()
-
-
-        # latest_file = max(files, key=os.path.getmtime)
-        # eslabon = pd.read_csv(latest_file, delimiter=';', decimal=',', low_memory=False, dtype=str)[['Nro_pieza_fabricante_1', 'Cod_Actual_1']]
-        # eslabon.rename(columns={'Nro_pieza_fabricante_1': 'Material'}, inplace=True)
-
-        # st.success(f"✅ COD cargado: {os.path.basename(latest_file)}")
 
         td_sellin['Material'] = td_sellin['Material'].astype(str).str.replace('.0', '', regex=False)
         td_sellin = td_sellin.groupby(['Material', 'Canal'])[['Venta UMB']].sum().reset_index()
@@ -699,26 +602,6 @@ def corregir_sellout():
         st.metric("Suma total Venta UMB", f"{totalsellin['Venta UMB'].sum():,.0f}")
         st.caption("✅ Consolidado unido con Sell Out GT")
 
-        # usuario_dir = os.path.expanduser("~")
-        # año_actual = datetime.now().year
-        # mes_actual = datetime.now().strftime('%m')
-        # ruta = os.path.join(usuario_dir, "DERCO CHILE REPUESTOS SpA", "Planificación y abastecimiento - Documentos", "Planificación y Compras Maestros", str(año_actual), f"{año_actual}-{mes_actual}", "MaestrosCSV")
-
-        # archivo_mara = None
-        # fecha_modificacion = None
-        # for archivo in os.listdir(ruta):
-        #     if 'MARA' in archivo and archivo.endswith('.csv'):
-        #         ruta_completa = os.path.join(ruta, archivo)
-        #         modificacion_actual = os.path.getmtime(ruta_completa)
-        #         if fecha_modificacion is None or modificacion_actual > fecha_modificacion:
-        #             archivo_mara = ruta_completa
-        #             fecha_modificacion = modificacion_actual
-
-        # if archivo_mara:
-        #     dfmara = pd.read_csv(archivo_mara, delimiter=';', decimal=',', low_memory=False, dtype=str)
-        #     st.success("✅ Archivo MARA cargado")
-        # else:
-        #     st.warning("⚠️ No se encontró archivo MARA")
         archivo_mara = st.file_uploader("📤 Subir archivo MARA (.csv)", type="csv")
 
         if archivo_mara is not None:
@@ -823,31 +706,6 @@ def corregir_sellout():
         columns_to_keep = [col for col in pivot_df.columns if not any(year in str(col) for year in ['2015', '2016', '2017'])]
         pivot_df = pivot_df[columns_to_keep]
 
-        # user_dir = os.path.expanduser('~')
-        # now = datetime.now()
-        # current_year = now.strftime('%Y')
-        # current_month = now.strftime('%m')
-        # previous_month = (now.replace(day=1) - pd.DateOffset(months=1)).strftime('%B-%y')
-        # cycle_month = (now + pd.DateOffset(months=1)).strftime('%b-%y')
-
-        # base_path = os.path.join(
-        #     user_dir,
-        #     'DERCO CHILE REPUESTOS SpA',
-        #     'Planificación y abastecimiento - Documentos',
-        #     'Planificación y Compras Anastasia',
-        #     'Carga Historia de Venta',
-        #     f'{current_year}-{current_month} Ciclo {cycle_month}',
-        #     'AFM',
-        #     'SELL OUT'
-        # )
-        # os.makedirs(base_path, exist_ok=True)
-        # st.subheader("Aplicación de reglas y guardado de resultados")
-
-        # # Exportar paths
-        # csv_path = os.path.join(base_path, f"{current_month}.{current_year} Sell_Out {previous_month} Corregido.csv")
-        # excel_path = os.path.join(base_path, f"{current_month}.{current_year} Sell_Out {previous_month} Corregido.xlsx")
-        # st.caption(f"📁 Archivos serán guardados en: {base_path}")
-
         pivot_df['Suma'] = pivot_df.drop(columns=['Ultimo Eslabón', 'Canal 3']).sum(axis=1)
         pivot_df = pivot_df[pivot_df['Suma'] != 0].drop(columns=['Suma'])
 
@@ -906,11 +764,6 @@ def corregir_sellout():
             if nuevas_columnas[i].endswith("_copy"):
                 nuevas_columnas[i] = nuevas_columnas[i].replace("_copy", "")
         pivot_df.columns = nuevas_columnas
-
-        # Guardado final
-        # pivot_df.to_csv(csv_path, sep=';', decimal=',', index=False)
-        # pivot_df.to_excel(excel_path, index=False)
-        # st.success("✅ Corrección de Sell Out completada")}
         import io
 
         now = datetime.now()
@@ -962,51 +815,11 @@ def corregir_disponibilidad():
         usuario = os.path.expanduser('~')
         fecha_actual = datetime.now().strftime('%Y-%m')
 
-        # ruta_base = os.path.join(
-        #     usuario,
-        #     'derco chile repuestos spa',
-        #     'Planificación y abastecimiento - Documentos',
-        #     'Planificación y Compras Anastasia',
-        #     'Carga Historia de Venta'
-        # )
-
-        # if not os.path.exists(ruta_base):
-        #     st.error(f"❌ Ruta base no existe: {ruta_base}")
-        #     return
-
-        # carpeta_año_mes = glob.glob(os.path.join(ruta_base, f'{fecha_actual}*'))
-        # if not carpeta_año_mes:
-        #     st.warning(f"📂 No se encontró carpeta año-mes con prefijo: {fecha_actual}")
-        #     return
-
-        # ruta_afm = os.path.join(carpeta_año_mes[0], 'AFM')
-        # if not os.path.exists(ruta_afm):
-        #     st.error(f"❌ Ruta AFM no encontrada: {ruta_afm}")
-        #     return
-
-        # ruta_sell_in = os.path.join(ruta_afm, 'SELL IN')
-        # archivos_sell_in = glob.glob(os.path.join(ruta_sell_in, '*Sell_In*.csv'))
-        # if not archivos_sell_in:
-        #     st.warning(f"❌ No se encontró archivo Sell_In en: {ruta_sell_in}")
-        #     return
-        # archivo_sell_in = archivos_sell_in[0]
-        # st.success(f"📄 Archivo Sell_In cargado: {archivo_sell_in}")
-        # df_sell_in = pd.read_csv(archivo_sell_in, delimiter=';', decimal=',')
         archivo_sell_in = st.file_uploader("📤 Carga archivo Sell In (venta cerrada mes pasado)(.csv)", type=["csv"])
         if archivo_sell_in is None:
             st.warning("❗ Esperando archivo Sell In")
             st.stop()
         df_sell_in = pd.read_csv(archivo_sell_in, delimiter=';', decimal=',')
-
-
-        # ruta_sell_out = os.path.join(ruta_afm, 'SELL OUT')
-        # archivos_sell_out = glob.glob(os.path.join(ruta_sell_out, '*Sell_Out*.csv'))
-        # if not archivos_sell_out:
-        #     st.warning(f"❌ No se encontró archivo Sell_Out en: {ruta_sell_out}")
-        #     return
-        # archivo_sell_out = archivos_sell_out[0]
-        # st.success(f"📄 Archivo Sell_Out cargado: {archivo_sell_out}")
-        # df_sell_out = pd.read_csv(archivo_sell_out, delimiter=';', decimal=',')
         archivo_sell_out = st.file_uploader("📤 Carga archivo Sell Out (.csv)", type=["csv"])
         if archivo_sell_out is None:
             st.warning("⚠️ Esperando archivo Sell Out...")
@@ -1063,16 +876,6 @@ def corregir_disponibilidad():
         df_sell_in.columns = df_sell_out.columns
         df_concat = pd.concat([df_sell_in, df_sell_out])
         df_concat['ALERTA'] = 'Fin_Correc_Outliers'
-
-        # ruta_stock = os.path.expanduser(
-        #     "~/DERCO CHILE REPUESTOS SpA/Planificación y abastecimiento - Documentos/Planificación y Compras Ventas/Stock Historico Query.xlsx"
-        # )
-        # if not os.path.exists(ruta_stock):
-        #     st.error(f"❌ Archivo de stock no encontrado: {ruta_stock}")
-        #     return
-
-        # st.success(f"📘 Archivo Stock Query cargado: {ruta_stock}")
-        # df_stock = pd.read_excel(ruta_stock, sheet_name='Stock Query')
         archivo_stock = st.file_uploader("📤 Carga archivo Stock Query (.xlsx) si es muy pesado crea un nuevo archivo solo con la hoja Stock Query", type=["xlsx"])
         if archivo_stock is None:
             st.warning("⚠️ Esperando archivo Stock Query...")
@@ -1169,43 +972,6 @@ def corregir_disponibilidad():
             7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
         }
 
-        # usuario = os.getlogin()
-        # fecha_actual = datetime.now()
-        # fecha_siguiente = fecha_actual + timedelta(days=30)
-        # fecha_anterior = fecha_actual - timedelta(days=30)
-
-        # mes_siguiente = fecha_siguiente.month
-        # mes_anterior = fecha_anterior.month
-
-        # import os
-
-        # usuario = os.path.expanduser("~")
-        # anio_mes_guardar = fecha_actual.strftime(f"%Y-%m Ciclo {meses_espanol_abreviado[mes_siguiente]}-%y")
-        # nombre_archivo_csv = fecha_actual.strftime(f"%Y.%m Correccion Disponibilidad {meses_espanol_completo[mes_anterior]}-%y") + ".csv"
-        # nombre_archivo_parquet = nombre_archivo_csv.replace('.csv', '.parquet')
-
-        # ruta_base_guardado = os.path.join(
-        #     usuario,
-        #     "derco chile repuestos spa",
-        #     "Planificación y abastecimiento - Documentos",
-        #     "Planificación y Compras Anastasia",
-        #     "Carga Historia de Venta",
-        #     anio_mes_guardar,
-        #     "AFM",
-        #     "Correccion Dispo"
-        # )
-
-        # os.makedirs(ruta_base_guardado, exist_ok=True)
-
-        # ruta_guardar_csv = os.path.join(ruta_base_guardado, nombre_archivo_csv)
-        # ruta_guardar_parquet = os.path.join(ruta_base_guardado, nombre_archivo_parquet)
-
-        # df_siso_combined.to_csv(ruta_guardar_csv, sep=';', decimal=',', index=False)
-        # df_siso_combined.to_parquet(ruta_guardar_parquet, index=False)
-
-        # st.success("✅ Archivos guardados correctamente.")
-        # st.write(f"💾 Ruta CSV: `{ruta_guardar_csv}`")
-        # st.write(f"💾 Ruta Parquet: `{ruta_guardar_parquet}`")
 
         import io
 
@@ -1258,39 +1024,6 @@ def corregir_disponibilidad():
         )
 
 
-        # import os
-        # import pandas as pd
-        # from datetime import datetime, timedelta
-
-        # meses_espanol_abreviado = {1: 'Ene', 2: 'Feb', 3: 'Mar', 4: 'Abr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Ago', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dic'}
-        # meses_espanol_completo = {1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'}
-
-        # usuario = os.getlogin()
-        # fecha_actual = datetime.now()
-        # fecha_siguiente = fecha_actual + timedelta(days=30)
-        # fecha_anterior = fecha_actual - timedelta(days=30)
-
-        # mes_siguiente = fecha_siguiente.month
-        # mes_anterior = fecha_anterior.month
-
-        # anio_mes_leer = fecha_actual.strftime(f"%Y-%m Ciclo {meses_espanol_abreviado[mes_siguiente]}-%y")
-        # nombre_archivo = fecha_actual.strftime(f"%Y.%m Correccion Disponibilidad {meses_espanol_completo[mes_anterior]}-%y")
-        # import os
-
-        # usuario = os.path.expanduser("~")
-        # ruta_leer = os.path.join(
-        #     usuario,
-        #     "derco chile repuestos spa",
-        #     "Planificación y abastecimiento - Documentos",
-        #     "Planificación y Compras Anastasia",
-        #     "Carga Historia de Venta",
-        #     anio_mes_leer,
-        #     "AFM",
-        #     "Correccion Dispo",
-        #     f"{nombre_archivo}.parquet"
-        # )
-
-        # df_siso_combined = pd.read_parquet(ruta_leer)
         import streamlit as st
         import pandas as pd
 
@@ -1365,20 +1098,6 @@ def corregir_disponibilidad():
         mara = pd.read_csv(archivo_mara, delimiter=';')
         st.success("✅ Archivo MARA cargado correctamente")
 
-
-        # if archivos_mara:
-        #     st.success(f"📄 Archivo MARA encontrado: {archivos_mara[0]}")
-        #     mara = pd.read_csv(archivos_mara[0], delimiter=';')
-
-        #     df_si_so = df_si_so.merge(
-        #         mara[['Material_S4', 'Nombre Sector']],
-        #         left_on='idSKU',
-        #         right_on='Material_S4',
-        #         how='left'
-        #     ).drop(columns=['Material_S4'])
-
-        #     sectores_filtrar = ['BAT', 'ACC', 'LUB', 'NEU', 'RALT', 'RMAQ']
-        #     df_si_so = df_si_so[df_si_so['Nombre Sector'].isin(sectores_filtrar)].drop(columns=['Nombre Sector'])
         df_si_so = df_si_so.merge(
             mara[['Material_S4', 'Nombre Sector']],
             left_on='idSKU',
@@ -1389,31 +1108,6 @@ def corregir_disponibilidad():
         sectores_filtrar = ['BAT', 'ACC', 'LUB', 'NEU', 'RALT', 'RMAQ']
         df_si_so = df_si_so[df_si_so['Nombre Sector'].isin(sectores_filtrar)].drop(columns=['Nombre Sector'])
 
-
-        #     import os
-
-        #     usuario = os.path.expanduser("~")
-        #     nombre_archivosi_so = fecha_actual.strftime(f"SI_SO Ciclo {meses_espanol_abreviado[mes_siguiente]}-%Y")
-
-        #     ruta_guardar_csvsi_so = os.path.join(
-        #         usuario,
-        #         "DERCO CHILE REPUESTOS SpA",
-        #         "Planificación y abastecimiento - Documentos",
-        #         "Planificación y Compras Anastasia",
-        #         "Carga Historia de Venta",
-        #         anio_mes_guardar,
-        #         "AFM",
-        #         "Correccion Dispo",
-        #         f"{nombre_archivosi_so}_st.csv"
-        #     )
-
-
-        #     os.makedirs(os.path.dirname(ruta_guardar_csvsi_so), exist_ok=True)
-        #     df_si_so.to_csv(ruta_guardar_csvsi_so, sep=',', index=False, encoding='utf-8')
-        #     st.success("📁 Archivo final exportado correctamente:")
-        #     st.code(ruta_guardar_csvsi_so)
-        # else:
-        #     st.warning(f"❌ No se encontró archivo MARA en: {ruta_mara}")
         import io
 
         nombre_archivosi_so = fecha_actual.strftime(f"SI_SO Ciclo {meses_espanol_abreviado[mes_siguiente]}-%Y")
