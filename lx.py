@@ -19,6 +19,8 @@ def corregir_sellin():
         from datetime import datetime
         import glob
         import numpy as np
+        from datetime import datetime
+        from io import BytesIO, StringIO
 
         # Obtener año y mes actual
         fecha_actual = datetime.now()
