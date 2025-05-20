@@ -32,7 +32,7 @@ def corregir_sellin():
             st.stop()
         
         try:
-            sellin = pd.read_excel(uploaded_file_sellin, sheet_name="Sheet1")
+            sellin = pd.read_excel(uploaded_file_sellin, sheet_name=0, engine="openpyxl")
             st.success("✅ Archivo Sell In leído correctamente.")
             st.write("Vista previa del archivo:")
             st.dataframe(sellin.head())
