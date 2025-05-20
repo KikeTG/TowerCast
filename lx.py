@@ -1583,6 +1583,6 @@ if st.session_state.forecast_ready:
 st.markdown("<br>", unsafe_allow_html=True)
 st.markdown(f"""
     <div style='text-align: center; font-size: 13px; color: #888888;'>
-        Última ejecución: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | TowerCast © 2025
+        Última ejecución: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | TowerCast by Enrique Torres © 2025
     </div>
 """, unsafe_allow_html=True)
