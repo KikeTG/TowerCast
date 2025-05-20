@@ -1,0 +1,6 @@
+pandas
+numpy
+streamlit
+statsmodels
+openpyxl
+python-dateutil
