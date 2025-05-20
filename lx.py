@@ -1435,10 +1435,10 @@ from datetime import datetime
 import time
 
 # Bloque para expirar la app después del 18-05-2025
-fecha_limite = datetime.strptime("2025-08-01", "%Y-%m-%d")
-if datetime.now() > fecha_limite:
-    st.error("⛔ Esta aplicación ha expirado. Contacta a soporte para renovarla.")
-    st.stop()
+# fecha_limite = datetime.strptime("2025-08-01", "%Y-%m-%d")
+# if datetime.now() > fecha_limite:
+#     st.error("⛔ Esta aplicación ha expirado. Contacta a soporte para renovarla.")
+#     st.stop()
 
 if 'forecast_ready' not in st.session_state:
     st.session_state.forecast_ready = False
