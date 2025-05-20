@@ -21,37 +21,24 @@ def corregir_sellin():
         import numpy as np
 
         # Obtener año y mes actual
-        fecha_actual = pd.Timestamp.now()
+        fecha_actual = datetime.now()
         año_actual = fecha_actual.year
         mes_actual = fecha_actual.strftime("%m")
-
-        # Ruta del archivo Sell In
-        # ruta_base_usuario = os.path.expanduser("~")
-        # ruta_directorio_base = os.path.join(
-        #     ruta_base_usuario,
-        #     "DERCO CHILE REPUESTOS SpA",
-        #     "Planificación y abastecimiento - Documentos",
-        #     "Planificación y Compras Ventas",
-        #     "Venta Historica Mensual"
-        # )
-        # ruta_directorio = os.path.join(ruta_directorio_base, str(año_actual), f"{año_actual}-{mes_actual}")
-
-        # # Buscar archivo con "Sell In"
-        # archivo_sellin = next((archivo for archivo in os.listdir(ruta_directorio) if "Sell In" in archivo), None)
-
-        # if archivo_sellin:
-        #     ruta_archivo_sellin = os.path.join(ruta_directorio, archivo_sellin)
-        #     sellin = pd.read_excel(ruta_archivo_sellin, sheet_name="Sheet1")
-        #     st.success(f"✅ Archivo Sell In leído: {archivo_sellin}")
-        #     st.dataframe(sellin.head())
-        # else:
-        #     st.error("❌ No se encontró ningún archivo con 'Sell In' en el nombre.")
-        #     st.stop()
+        
         uploaded_file_sellin = st.file_uploader("📤 Sube el archivo Sell In (.xlsx)", type="xlsx")
+        
         if uploaded_file_sellin is None:
             st.warning("⚠️ Esperando archivo Sell In...")
             st.stop()
-        sellin = pd.read_excel(uploaded_file_sellin, sheet_name="Sheet1")
+        
+        try:
+            sellin = pd.read_excel(uploaded_file_sellin, sheet_name="Sheet1")
+            st.success("✅ Archivo Sell In leído correctamente.")
+            st.write("Vista previa del archivo:")
+            st.dataframe(sellin.head())
+        except Exception as e:
+            st.error(f"❌ Error al leer el archivo Sell In: {e}")
+            st.stop()
 
 
         # Procesamiento del archivo Sell In
@@ -72,38 +59,8 @@ def corregir_sellin():
         st.metric("Total Venta UMB (positiva)", f"{venta_total:,.0f}")
         st.dataframe(td_sellin)
 
-        # ruta_archivo_manual = os.path.join(
-        #     ruta_base_usuario,
-        #     'DERCO CHILE REPUESTOS SpA',
-        #     'Planificación y abastecimiento - Documentos',
-        #     'Planificación y Compras AFM',
-        #     'S&OP Demanda',
-        #     'Codigos Demanda',
-        #     'Parquets',
-        #     'Historia_Sell_In.parquet'
-        # )
-
         two_months_ago = (datetime.now() - pd.DateOffset(months=2)).strftime('%Y-%m')
 
-        # ruta_archivo_automatica = os.path.join(
-        #     ruta_base_usuario,
-        #     'DERCO CHILE REPUESTOS SpA',
-        #     'Planificación y abastecimiento - Documentos',
-        #     'Planificación y Compras AFM',
-        #     'S&OP Demanda',
-        #     'Codigos Demanda',
-        #     'Parquets',
-        #     f'Historia_Sell_In ({two_months_ago}).parquet'
-        # )
-
-        # st.caption(f"Ruta archivo manual: `{ruta_archivo_manual}`")
-        # st.caption(f"Ruta archivo automática: `{ruta_archivo_automatica}`")
-
-        # Leer archivo histórico combinado
-        # st.subheader("Lectura del archivo histórico .parquet")
-
-        # ruta_archivo = ruta_archivo_automatica
-        # df_combinado = pd.read_parquet(ruta_archivo)
         uploaded_hist = st.file_uploader("📤 Sube el archivo histórico .parquet", type="parquet")
         if uploaded_hist is None:
             st.warning("⚠️ Esperando archivo histórico...")
