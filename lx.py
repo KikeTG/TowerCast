@@ -1,6 +1,41 @@
 import streamlit as st
 from datetime import datetime
 from io import BytesIO, StringIO
+import streamlit as st
+import pandas as pd
+from datetime import datetime, timedelta
+import io
+
+def cargar_archivo_sellin():
+    uploaded_file_sellin = st.file_uploader("📤 Sube el archivo Sell In (.xlsx)", type="xlsx")
+    if uploaded_file_sellin is not None:
+        try:
+            sellin = pd.read_excel(uploaded_file_sellin, sheet_name=0, engine="openpyxl")
+            st.success("✅ Archivo Sell In leído correctamente.")
+            return sellin
+        except Exception as e:
+            st.error(f"❌ Error al leer el archivo Sell In: {e}")
+    return None
+def cargar_archivo_hist():
+    uploaded_hist = st.file_uploader("📤 Sube el archivo histórico .parquet", type="parquet")
+    if uploaded_hist is not None:
+        try:
+            df_combinado = pd.read_parquet(uploaded_hist)
+            return df_combinado
+        except Exception as e:
+            st.error(f"❌ Error al leer el archivo histórico: {e}")
+    return None
+def cargar_archivo_cod():
+    uploaded_cod = st.file_uploader("📤 Sube el archivo COD (.csv)", type="csv")
+    if uploaded_cod is not None:
+        try:
+            ultimoeslabon = pd.read_csv(uploaded_cod, delimiter=';', encoding='latin-1', decimal=',')
+            return ultimoeslabon
+        except Exception as e:
+            st.error(f"❌ Error al leer el archivo COD: {e}")
+    return None
+
+
 def corregir_sellin():
         import os
         import pandas as pd
@@ -27,21 +62,10 @@ def corregir_sellin():
         año_actual = fecha_actual.year
         mes_actual = fecha_actual.strftime("%m")
         
-        uploaded_file_sellin = st.file_uploader("📤 Sube el archivo Sell In (.xlsx)", type="xlsx")
-        
-        if uploaded_file_sellin is None:
+        sellin = cargar_archivo_sellin()
+        if sellin is None:
             st.warning("⚠️ Esperando archivo Sell In...")
-            st.stop()
-        
-        try:
-            sellin = pd.read_excel(uploaded_file_sellin, sheet_name=0, engine="openpyxl")
-            st.success("✅ Archivo Sell In leído correctamente.")
-            st.write("Vista previa del archivo:")
-            st.dataframe(sellin.head())
-        except Exception as e:
-            st.error(f"❌ Error al leer el archivo Sell In: {e}")
-            st.stop()
-
+            return
 
         # Procesamiento del archivo Sell In
         sellin.rename(columns={'Nuevo Canal': 'Canal 2'}, inplace=True)
