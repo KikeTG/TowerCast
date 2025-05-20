@@ -10,3 +10,4 @@ fsspec
 locale
 python-dateutil
 statsmodels
+scipy
