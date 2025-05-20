@@ -1,6 +1,12 @@
+streamlit
 pandas
 numpy
-streamlit
-statsmodels
 openpyxl
+xlsxwriter
 python-dateutil
+glob2
+pyarrow
+fsspec
+locale
+python-dateutil
+statsmodels
